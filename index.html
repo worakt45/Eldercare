@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทวิเคราะห์ธุรกิจบ้านพักผู้สูงอายุ จังหวัดเชียงใหม่</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Calming Sage Green -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard with four thematic sections: Market Overview, Business Process, Competitor Analysis, and Strategy. This non-linear structure was chosen over a traditional report format to allow users to explore complex business information intuitively. Users can jump to any section of interest, interact with charts to filter data, and click on process steps or customer segments to reveal detailed information on demand. This approach facilitates better comprehension and decision-making by breaking down a multifaceted business plan into digestible, explorable modules. -->
+    <!-- Visualization & Content Choices: 
+        1. Market Demographics -> Goal: Inform -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Provides a quick, clear overview of the senior population structure. Library: Chart.js (Canvas).
+        2. Business Lifecycle -> Goal: Organize/Inform -> Viz: Interactive HTML/CSS Timeline -> Interaction: Click step to reveal details -> Justification: Simplifies a complex, multi-phase process into a clear, step-by-step visual guide without overwhelming the user. Method: HTML/Tailwind.
+        3. Competitor Comparison -> Goal: Compare -> Viz: Bar Chart -> Interaction: Buttons to switch data view (Price vs. Capacity) -> Justification: Allows for direct, dynamic comparison of competitors on key metrics. Library: Chart.js (Canvas).
+        4. Target Customer Segments -> Goal: Guide Decision -> Viz: Interactive Cards -> Interaction: Select segment to see detailed analysis -> Justification: Creates an interactive tool for strategic planning, helping users weigh the pros and cons of targeting different market segments. Method: HTML/Tailwind/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #FDFBF8;
+            color: #3f3c3a;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4A6C6F;
+            border-bottom-color: #4A6C6F;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #F0EBE3;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #4A6C6F;
+            color: #FFFFFF;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #3E5A5C;
+        }
+        .btn-secondary {
+            background-color: #EAE7E1;
+            color: #3f3c3a;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary.active {
+            background-color: #4A6C6F;
+            color: #FFFFFF;
+        }
+        .section-title {
+            color: #3E5A5C;
+        }
+        .kpi-value {
+            color: #4A6C6F;
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 450px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { 
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800">แผนธุรกิจบ้านพักผู้สูงอายุ <span class="text-[#4A6C6F]">เชียงใหม่</span></h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#market" class="nav-link">ภาพรวมตลาด</a>
+                <a href="#process" class="nav-link">ขั้นตอนธุรกิจ</a>
+                <a href="#competitors" class="nav-link">วิเคราะห์คู่แข่ง</a>
+                <a href="#strategy" class="nav-link">กลยุทธ์</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        
+        <section id="market" class="mb-20 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-center mb-4 section-title">ภาพรวมตลาดและศักยภาพ</h2>
+            <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                เชียงใหม่เป็นจังหวัดยุทธศาสตร์สำหรับธุรกิจดูแลผู้สูงอายุ ด้วยสังคมสูงวัยที่เติบโตอย่างรวดเร็ว ประกอบกับคุณภาพชีวิตที่ดีและค่าครองชีพที่เหมาะสม ทำให้ดึงดูดทั้งชาวไทยและชาวต่างชาติ ส่วนนี้จะพาคุณสำรวจศักยภาพของตลาดผ่านข้อมูลสำคัญและแนวโน้มประชากร
+            </p>
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="card p-6 text-center">
+                    <h3 class="font-semibold text-lg text-gray-700">ประชากรสูงอายุในเชียงใหม่</h3>
+                    <p class="kpi-value text-4xl font-bold my-2">~320,000+</p>
+                    <p class="text-gray-500">คิดเป็น >20% ของประชากรทั้งหมด (สังคมสูงวัยโดยสมบูรณ์)</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <h3 class="font-semibold text-lg text-gray-700">อัตราการเติบโตต่อปี</h3>
+                    <p class="kpi-value text-4xl font-bold my-2">~4-5%</p>
+                    <p class="text-gray-500">ความต้องการที่พักและบริการสำหรับผู้สูงอายุเพิ่มขึ้นต่อเนื่อง</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <h3 class="font-semibold text-lg text-gray-700">มูลค่าตลาดโดยประมาณ</h3>
+                    <p class="kpi-value text-4xl font-bold my-2">฿2.5 พันล้าน+</p>
+                    <p class="text-gray-500">และมีแนวโน้มเติบโตสูงขึ้นจากการขยายตัวของกลุ่มลูกค้า</p>
+                </div>
+            </div>
+            <div class="card p-6 md:p-8">
+                <h3 class="text-xl font-semibold text-center mb-4">สัดส่วนกลุ่มผู้สูงอายุในเชียงใหม่ (โดยประมาณ)</h3>
+                <div class="chart-container">
+                    <canvas id="populationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="mb-20 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-center mb-4 section-title">ขั้นตอนการดำเนินธุรกิจ</h2>
+             <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                การสร้างธุรกิจบ้านพักผู้สูงอายุมีกระบวนการที่ซับซ้อนและต้องใส่ใจในทุกรายละเอียดตั้งแต่การวางแผนเริ่มต้นจนถึงการดำเนินงานประจำวัน ไทม์ไลน์อินเทอร์แอคทีฟนี้จะแสดงขั้นตอนหลักๆ เพื่อให้คุณเห็นภาพรวมทั้งหมด คลิกที่แต่ละขั้นตอนเพื่อดูรายละเอียดเพิ่มเติม
+            </p>
+            <div id="process-timeline" class="space-y-8">
+            </div>
+            <div id="process-details" class="mt-8 card p-6 md:p-8 hidden">
+                <h3 id="details-title" class="text-2xl font-bold mb-4"></h3>
+                <div id="details-content"></div>
+            </div>
+        </section>
+
+        <section id="competitors" class="mb-20 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-center mb-4 section-title">วิเคราะห์คู่แข่งในตลาด</h2>
+            <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                ตลาดบ้านพักผู้สูงอายุในเชียงใหม่มีการแข่งขันที่หลากหลาย ตั้งแต่ระดับพรีเมียมสำหรับชาวต่างชาติไปจนถึงระดับที่เข้าถึงง่ายสำหรับคนไทย การทำความเข้าใจจุดแข็งและจุดอ่อนของคู่แข่งเป็นกุญแจสำคัญในการวางตำแหน่งธุรกิจของคุณ คลิกเพื่อเปรียบเทียบข้อมูลในมิติต่างๆ
+            </p>
+            <div class="card p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                     <h3 class="text-xl font-semibold mb-4 md:mb-0">เปรียบเทียบคู่แข่งรายสำคัญ</h3>
+                     <div id="chart-controls" class="flex space-x-2">
+                        <button class="btn-secondary active px-4 py-2 rounded-md text-sm" data-metric="price">ช่วงราคา</button>
+                        <button class="btn-secondary px-4 py-2 rounded-md text-sm" data-metric="capacity">จำนวนที่รองรับ</button>
+                    </div>
+                </div>
+                <div class="chart-container h-[400px] max-h-[450px]">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-center mb-4 section-title">กลยุทธ์และคำแนะนำ</h2>
+            <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                ความสำเร็จของธุรกิจไม่ได้ขึ้นอยู่กับสิ่งอำนวยความสะดวกเท่านั้น แต่ยังรวมถึงการเลือกกลุ่มลูกค้าที่เหมาะสมและการสร้างจุดขายที่แตกต่าง ส่วนนี้จะนำเสนอแนวทางการเลือกกลุ่มเป้าหมาย พร้อมข้อดี ข้อควรระวัง และปัจจัยสำคัญที่จะนำไปสู่ความสำเร็จที่ยั่งยืน
+            </p>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-1/3">
+                    <h3 class="text-xl font-semibold mb-4">เลือกกลุ่มลูกค้าเป้าหมาย:</h3>
+                    <div id="segment-selector" class="space-y-3">
+                    </div>
+                </div>
+                <div class="lg:w-2/3">
+                    <div id="segment-details" class="card p-6 md:p-8">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center text-sm">
+            <p>&copy; 2025 Business Analysis Report. For demonstration purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const smoothScroll = (targetId) => {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    smoothScroll(this.getAttribute('href'));
+                });
+            });
+
+
+            const populationData = {
+                labels: [
+                    'กลุ่มติดสังคม (Active Aging)',
+                    'กลุ่มติดบ้าน (Homebound)',
+                    'กลุ่มติดเตียง (Bedridden)',
+                ],
+                datasets: [{
+                    label: 'สัดส่วนผู้สูงอายุ',
+                    data: [55, 30, 15],
+                    backgroundColor: [
+                        '#4A6C6F',
+                        '#8AB0AB',
+                        '#C4D7D1',
+                    ],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            const populationChartCtx = document.getElementById('populationChart').getContext('2d');
+            new Chart(populationChartCtx, {
+                type: 'doughnut',
+                data: populationData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const processData = [
+                { id: 'plan', title: '1. วางแผนและวิจัย (Planning & Research)', icon: '📝', content: '<ul><li class="mb-2"><strong>วิเคราะห์ตลาด:</strong> ศึกษาความต้องการ, คู่แข่ง, และกลุ่มเป้าหมาย</li><li class="mb-2"><strong>จัดทำแผนธุรกิจ:</strong> กำหนดรูปแบบบริการ, โครงสร้างราคา, แผนการเงิน</li><li class="mb-2"><strong>หาทำเลที่ตั้ง:</strong> เลือกพื้นที่ที่สงบ, ปลอดภัย, เข้าถึงง่าย, ใกล้โรงพยาบาล</li><li class="mb-2"><strong>ประเมินความเป็นไปได้ทางการเงิน:</strong> คำนวณต้นทุน, ประมาณการรายได้, หาแหล่งเงินทุน</li></ul>'},
+                { id: 'legal', title: '2. กฎหมายและการขออนุญาต (Legal & Licensing)', icon: '⚖️', content: '<ul><li class="mb-2"><strong>จดทะเบียนธุรกิจ:</strong> เลือกรูปแบบบริษัทที่เหมาะสม</li><li class="mb-2"><strong>ขอใบอนุญาตประกอบกิจการสถานดูแลผู้สูงอายุ:</strong> จากกรมสนับสนุนบริการสุขภาพ (สบส.)</li><li class="mb-2"><strong>ขอใบอนุญาตก่อสร้าง/ดัดแปลงอาคาร:</strong> จากหน่วยงานท้องถิ่น</li><li class="mb-2"><strong>ศึกษาข้อกฎหมายอื่นๆ:</strong> เช่น กฎหมายแรงงาน, สาธารณสุข, สิ่งแวดล้อม</li></ul>'},
+                { id: 'construct', title: '3. ออกแบบและก่อสร้าง (Design & Construction)', icon: '🏗️', content: '<ul><li class="mb-2"><strong>ออกแบบตามหลัก Universal Design:</strong> เพื่อให้เหมาะสมและปลอดภัยสำหรับผู้สูงอายุ</li><li class="mb-2"><strong>วางผังพื้นที่ใช้สอย:</strong> ห้องพัก, พื้นที่ส่วนกลาง, พื้นที่กิจกรรม, ห้องพยาบาล</li><li class="mb-2"><strong>ก่อสร้างและตกแต่ง:</strong> เลือกผู้รับเหมา, ควบคุมคุณภาพงาน</li><li class="mb-2"><strong>ติดตั้งอุปกรณ์และสิ่งอำนวยความสะดวก:</strong> เตียง, ราวจับ, อุปกรณ์ทางการแพทย์, ระบบรักษาความปลอดภัย</li></ul>'},
+                { id: 'hr', title: '4. การบริหารบุคคลและจัดซื้อ (HR & Procurement)', icon: '👥', content: '<ul><li class="mb-2"><strong>สรรหาและว่าจ้างบุคลากร:</strong> ผู้จัดการ, พยาบาล, นักกายภาพ, ผู้ดูแล, แม่ครัว, พนักงานทำความสะอาด</li><li class="mb-2"><strong>ฝึกอบรมพนักงาน:</strong> ด้านการดูแลผู้สูงอายุ, การปฐมพยาบาล, จิตวิทยาบริการ</li><li class="mb-2"><strong>จัดซื้อ/จัดจ้าง:</strong> วัตถุดิบอาหาร, เวชภัณฑ์, บริการซักรีด, ระบบจัดการข้อมูลลูกค้า</li></ul>'},
+                { id: 'marketing', title: '5. การตลาดและการขาย (Marketing & Sales)', icon: '📢', content: '<ul><li class="mb-2"><strong>สร้างแบรนด์และกำหนดจุดขาย:</strong> สร้างความแตกต่างจากคู่แข่ง</li><li class="mb-2"><strong>ทำการตลาดออนไลน์:</strong> เว็บไซต์, โซเชียลมีเดีย, โฆษณาออนไลน์</li><li class="mb-2"><strong>ทำการตลาดออฟไลน์:</strong> จัด open house, สร้างเครือข่ายกับโรงพยาบาล, เข้าร่วมงานแฟร์</li><li class="mb-2"><strong>ตั้งทีมขายและกำหนดแพ็กเกจ:</strong> สำหรับลูกค้ารายวัน, รายเดือน, รายปี</li></ul>'},
+                { id: 'operation', title: '6. เปิดดำเนินการและบำรุงรักษา (Operation & Maintenance)', icon: '⚙️', content: '<ul><li class="mb-2"><strong>รับลูกค้ารายแรกและเริ่มให้บริการ:</strong> ดูแลตามมาตรฐานที่กำหนด</li><li class="mb-2"><strong>จัดกิจกรรมส่งเสริมสุขภาพ:</strong> กายภาพบำบัด, กิจกรรมนันทนาการ, กิจกรรมทางสังคม</li><li class="mb-2"><strong>บริหารจัดการคุณภาพบริการ:</strong> รับฟังความคิดเห็น, ประเมินความพึงพอใจ</li><li class="mb-2"><strong>บำรุงรักษาสถานที่และอุปกรณ์:</strong> ดูแลความสะอาด, ความปลอดภัย, และความพร้อมใช้งาน</li></ul>'},
+            ];
+            
+            const timelineContainer = document.getElementById('process-timeline');
+            processData.forEach(item => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'card p-4 md:p-6 flex items-center gap-4 cursor-pointer process-step';
+                stepElement.dataset.id = item.id;
+                stepElement.innerHTML = `
+                    <div class="text-4xl">${item.icon}</div>
+                    <div class="flex-grow">
+                        <h4 class="font-bold text-lg text-gray-800">${item.title}</h4>
+                    </div>
+                    <div class="text-2xl text-gray-400">→</div>
+                `;
+                timelineContainer.appendChild(stepElement);
+            });
+
+            const detailsContainer = document.getElementById('process-details');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsContent = document.getElementById('details-content');
+
+            document.querySelectorAll('.process-step').forEach(step => {
+                step.addEventListener('click', () => {
+                    const stepId = step.dataset.id;
+                    const stepData = processData.find(p => p.id === stepId);
+                    
+                    document.querySelectorAll('.process-step').forEach(s => s.classList.remove('ring-2', 'ring-[#4A6C6F]'));
+                    step.classList.add('ring-2', 'ring-[#4A6C6F]');
+
+                    detailsTitle.textContent = stepData.title;
+                    detailsContent.innerHTML = stepData.content;
+                    detailsContainer.classList.remove('hidden');
+                });
+            });
+
+
+            const competitorData = {
+                labels: ['The Aspen Tree', 'Care Resort CM', 'Baan Kamlangchay', 'Vivo Bene Village', 'Dok Kaew Gardens'],
+                price: {
+                    label: 'ช่วงราคาต่อเดือน (บาท)',
+                    data: [120000, 80000, 65000, 95000, 50000],
+                    backgroundColor: '#4A6C6F',
+                },
+                capacity: {
+                    label: 'จำนวนที่รองรับ (คน)',
+                    data: [290, 150, 40, 120, 60],
+                    backgroundColor: '#8AB0AB',
+                }
+            };
+            
+            let currentMetric = 'price';
+            const competitorChartCtx = document.getElementById('competitorChart').getContext('2d');
+            let competitorChart = new Chart(competitorChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: competitorData.labels,
+                    datasets: [{
+                        label: competitorData[currentMetric].label,
+                        data: competitorData[currentMetric].data,
+                        backgroundColor: competitorData[currentMetric].backgroundColor,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('th-TH').format(context.parsed.x);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: competitorData[currentMetric].label
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.querySelectorAll('#chart-controls button').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentMetric = button.dataset.metric;
+                    document.querySelectorAll('#chart-controls button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    competitorChart.data.datasets[0].label = competitorData[currentMetric].label;
+                    competitorChart.data.datasets[0].data = competitorData[currentMetric].data;
+                    competitorChart.data.datasets[0].backgroundColor = competitorData[currentMetric].backgroundColor;
+                    competitorChart.options.scales.x.title.text = competitorData[currentMetric].label;
+                    competitorChart.update();
+                });
+            });
+            
+            const segmentData = [
+                { id: 'thai-affluent', name: 'ชาวไทยฐานะปานกลาง-สูง', description: 'กลุ่มผู้สูงอายุชาวไทยที่ครอบครัวมีกำลังซื้อ ต้องการบริการคุณภาพสูง ความสะดวกสบาย และกิจกรรมที่หลากหลาย', pros: ['กำลังซื้อสูง', 'การสื่อสารและวัฒนธรรมเดียวกัน', 'ตลาดขนาดใหญ่และเติบโต'], cons: ['มีความคาดหวังสูง', 'การแข่งขันสูงในกลุ่มนี้', 'อ่อนไหวต่อชื่อเสียงและคำวิจารณ์'], services: ['บริการดูแลส่วนบุคคล 24 ชม.', 'โปรแกรมสุขภาพและ wellness ครบวงจร', 'กิจกรรมนันทนาการและทัศนศึกษา', 'อาหารคุณภาพสูงที่ปรับตามความต้องการ'] },
+                { id: 'expat', name: 'ชาวต่างชาติวัยเกษียณ (Expat)', description: 'กลุ่มชาวต่างชาติที่เลือกเชียงใหม่เป็นบ้านหลังที่สอง ต้องการมาตรฐานบริการระดับสากล ชุมชน และความปลอดภัย', pros: ['จ่ายในสกุลเงินต่างประเทศ (กำลังซื้อสูงมาก)', 'มีความภักดีต่อแบรนด์สูงหากบริการดี', 'เชียงใหม่เป็นที่นิยมของชาวต่างชาติอยู่แล้ว'], cons: ['ต้องใช้บุคลากรที่สื่อสารภาษาอังกฤษได้ดี', 'ความซับซ้อนด้านกฎหมายและวีซ่า', 'ความคาดหวังด้านมาตรฐานบริการที่แตกต่าง'], services: ['บุคลากรสื่อสารได้หลายภาษา', 'บริการช่วยเหลือด้านวีซ่าและเอกสาร', 'กิจกรรมที่เชื่อมโยงกับวัฒนธรรมท้องถิ่นและชุมชนชาวต่างชาติ', 'มาตรฐานการพยาบาลและสิ่งอำนวยความสะดวกสากล'] },
+                { id: 'special-care', name: 'ผู้ที่ต้องการการดูแลพิเศษ', description: 'กลุ่มผู้สูงอายุที่มีภาวะพึ่งพิงสูง เช่น สมองเสื่อม, อัลไซเมอร์, หรือต้องการการฟื้นฟูหลังผ่าตัด', pros: ['ค่าบริการสูงกว่ากลุ่มทั่วไป', 'การแข่งขันน้อยกว่าเพราะต้องการความเชี่ยวชาญเฉพาะทาง', 'เป็นบริการที่มีความต้องการสูงและจำเป็น'], cons: ['ต้องลงทุนในอุปกรณ์และการฝึกอบรมบุคลากรสูง', 'มีความเสี่ยงและความรับผิดชอบสูง', 'ต้องผ่านมาตรฐานที่เข้มงวดมาก'], services: ['พยาบาลและผู้ดูแลที่ผ่านการอบรมเฉพาะทาง', 'โปรแกรมกระตุ้นสมองและความจำ', 'กายภาพบำบัดและกิจกรรมบำบัด', 'สภาพแวดล้อมที่ปลอดภัยและออกแบบมาโดยเฉพาะ'] },
+            ];
+
+            const segmentSelector = document.getElementById('segment-selector');
+            const segmentDetailsContainer = document.getElementById('segment-details');
+
+            segmentData.forEach((segment, index) => {
+                const button = document.createElement('button');
+                button.className = `w-full text-left p-4 rounded-lg border transition-colors segment-btn ${index === 0 ? 'bg-[#EAE7E1] border-[#4A6C6F]' : 'bg-white border-gray-200'}`;
+                button.dataset.id = segment.id;
+                button.textContent = segment.name;
+                segmentSelector.appendChild(button);
+            });
+
+            const renderSegmentDetails = (segmentId) => {
+                const segment = segmentData.find(s => s.id === segmentId);
+                segmentDetailsContainer.innerHTML = `
+                    <h4 class="text-2xl font-bold text-[#3E5A5C] mb-2">${segment.name}</h4>
+                    <p class="text-gray-600 mb-6">${segment.description}</p>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h5 class="font-semibold mb-2 text-green-700">ข้อดี / โอกาส</h5>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">${segment.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold mb-2 text-red-700">ข้อควรระวัง / ความท้าทาย</h5>
+                            <ul class="list-disc list-inside text-gray-700 space-y-1">${segment.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="font-semibold mb-2 text-gray-800">บริการที่แนะนำสำหรับกลุ่มนี้</h5>
+                        <div class="flex flex-wrap gap-2">${segment.services.map(s => `<span class="bg-gray-100 text-gray-700 text-sm font-medium px-3 py-1 rounded-full">${s}</span>`).join('')}</div>
+                    </div>
+                `;
+            };
+
+            document.querySelectorAll('.segment-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('bg-[#EAE7E1]', 'border-[#4A6C6F]'));
+                    button.classList.add('bg-[#EAE7E1]', 'border-[#4A6C6F]');
+                    renderSegmentDetails(button.dataset.id);
+                });
+            });
+
+            renderSegmentDetails(segmentData[0].id);
+
+        });
+    </script>
+</body>
+</html>
